@@ -1,6 +1,9 @@
 pipeline {
     agent any
     environment {
+        // Declaramos las credenciales de Telegram y los resultados de cada etapa
+        TELEGRAM_BOT_TOKEN = credentials('telegram_bot_token')
+        TELEGRAM_CHAT_ID = credentials('telegram_chat_id')
         EXECUTOR = ''
         MOTIVO = ''
         CHAT_ID = ''
@@ -10,13 +13,19 @@ pipeline {
         UPDATE_README_RESULT = ''
         DEPLOY_RESULT = ''
     }
+    parameters {
+        string(name: 'EXECUTOR', defaultValue: '', description: 'Nombre de la persona ejecutando la pipeline')
+        string(name: 'MOTIVO', defaultValue: '', description: 'Motivo para ejecutar la pipeline')
+        string(name: 'CHAT_ID', defaultValue: '', description: 'Chat ID de Telegram para las notificaciones')
+    }
     stages {
         stage('Petició de dades') {
             steps {
                 script {
-                    EXECUTOR = input(message: 'Qui està executant aquesta pipeline?', parameters: [string(defaultValue: '', description: 'Nom de la persona')])
-                    MOTIVO = input(message: 'Motiu per executar la pipeline?', parameters: [string(defaultValue: '', description: 'Motiu')])
-                    CHAT_ID = input(message: 'Introduir Chat ID per notificacions de Telegram:', parameters: [string(defaultValue: '', description: 'Chat ID')])
+                    // Solicitar los datos a través de los parámetros
+                    EXECUTOR = params.EXECUTOR
+                    MOTIVO = params.MOTIVO
+                    CHAT_ID = params.CHAT_ID
                 }
             }
         }
@@ -24,8 +33,8 @@ pipeline {
         stage('Linter') {
             steps {
                 script {
-                    // Aquí debes ejecutar el linter configurado
-                    sh 'npm run lint' // O el comando correspondiente
+                    // Ejecutar el linter
+                    sh 'npm run lint'  // Asegúrate de tener un script "lint" configurado en tu package.json
                     LINTER_RESULT = currentBuild.result
                 }
             }
@@ -34,7 +43,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Ejecutar los tests
+                    // Ejecutar los tests con Jest
                     sh 'npm test'
                     TEST_RESULT = currentBuild.result
                 }
@@ -44,7 +53,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Ejecutar el build
+                    // Ejecutar el build del proyecto
                     sh 'npm run build'
                     BUILD_RESULT = currentBuild.result
                 }
@@ -54,7 +63,7 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
-                    // Ejecutar el script para actualizar README.md
+                    // Ejecutar el script que actualiza el README.md con el badge de los tests
                     sh './jenkinsScripts/updateReadme.sh'
                     UPDATE_README_RESULT = currentBuild.result
                 }
@@ -64,8 +73,8 @@ pipeline {
         stage('Push_Changes') {
             steps {
                 script {
-                    // Script para hacer commit y push de los cambios
-                    sh './jenkinsScripts/pushChanges.sh'
+                    // Ejecutar el script para hacer commit y push de los cambios al repositorio
+                    sh './jenkinsScripts/pushChanges.sh ${EXECUTOR} ${MOTIVO}'
                 }
             }
         }
@@ -76,7 +85,7 @@ pipeline {
             }
             steps {
                 script {
-                    // Desplegar a Vercel
+                    // Ejecutar el script para desplegar a Vercel
                     sh './jenkinsScripts/deployToVercel.sh'
                     DEPLOY_RESULT = currentBuild.result
                 }
@@ -86,25 +95,16 @@ pipeline {
         stage('Notificació') {
             steps {
                 script {
-                    // Enviar notificación a Telegram
-                    withCredentials([string(credentialsId: 'telegram_bot_token', variable: 'BOT_TOKEN'),
-                                     string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')]) {
-                    sh "./jenkinsScripts/sendNotification.sh ${CHAT_ID} ${LINTER_RESULT} ${TEST_RESULT} ${UPDATE_README_RESULT} ${DEPLOY_RESULT}"
+                    // Enviar la notificación a Telegram
+                    sh "./jenkinsScripts/sendNotification.sh ${TELEGRAM_CHAT_ID} ${LINTER_RESULT} ${TEST_RESULT} ${UPDATE_README_RESULT} ${DEPLOY_RESULT}"
                 }
             }
         }
-        }
     }
-
     post {
         always {
-            // Mensaje final con los resultados de la ejecución
+            // Enviar mensaje final con los resultados de la ejecución
             echo "Pipeline ejecutada por ${EXECUTOR} con motivo: ${MOTIVO}"
-            echo "Resultados de la ejecución: "
-            echo "Linter: ${LINTER_RESULT}"
-            echo "Test: ${TEST_RESULT}"
-            echo "Update Readme: ${UPDATE_README_RESULT}"
-            echo "Deploy to Vercel: ${DEPLOY_RESULT}"
         }
     }
 }
