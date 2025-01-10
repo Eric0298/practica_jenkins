@@ -25,6 +25,7 @@ pipeline {
                     EXECUTOR = params.EXECUTOR
                     MOTIVO = params.MOTIVO
                     CHAT_ID = params.CHAT_ID
+                    echo "Datos recibidos: Ejecutando por ${EXECUTOR}, motivo: ${MOTIVO}, chat ID: ${CHAT_ID}"
                 }
             }
         }
@@ -32,7 +33,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Instalar las dependencias del proyecto antes de lint y test
+                    echo "Instalando dependencias..."
                     sh 'npm install'
                 }
             }
@@ -41,7 +42,8 @@ pipeline {
         stage('Linter') {
             steps {
                 script {
-                    sh 'npm run lint'  // Asegúrate de tener un script "lint" configurado en tu package.json
+                    echo "Ejecutando linter..."
+                    sh 'npm run lint'
                     LINTER_RESULT = currentBuild.result
                 }
             }
@@ -50,6 +52,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    echo "Ejecutando tests..."
                     sh 'npm test'
                     TEST_RESULT = currentBuild.result
                 }
@@ -59,6 +62,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    echo "Construyendo proyecto..."
                     sh 'npm run build'
                     BUILD_RESULT = currentBuild.result
                 }
@@ -68,6 +72,7 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
+                    echo "Actualizando README..."
                     sh './jenkinsScripts/updateReadme.sh'
                     UPDATE_README_RESULT = currentBuild.result
                 }
@@ -77,6 +82,7 @@ pipeline {
         stage('Push_Changes') {
             steps {
                 script {
+                    echo "Pusheando cambios al repositorio..."
                     sh './jenkinsScripts/pushChanges.sh ${EXECUTOR} ${MOTIVO}'
                 }
             }
@@ -88,15 +94,17 @@ pipeline {
             }
             steps {
                 script {
+                    echo "Desplegando a Vercel..."
                     sh './jenkinsScripts/deployToVercel.sh'
                     DEPLOY_RESULT = currentBuild.result
                 }
             }
         }
 
-        stage('Notificació') {
+        stage('Notificación') {
             steps {
                 script {
+                    echo "Enviando notificación a Telegram..."
                     sh "./jenkinsScripts/sendNotification.sh ${TELEGRAM_CHAT_ID} ${LINTER_RESULT} ${TEST_RESULT} ${UPDATE_README_RESULT} ${DEPLOY_RESULT}"
                 }
             }
