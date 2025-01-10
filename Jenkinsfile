@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools { nodejs "Node.js" }
+    tools { nodejs "Node" }
     environment {
         // Declaramos las credenciales de Telegram y los resultados de cada etapa
         TELEGRAM_BOT_TOKEN = credentials('telegram_bot_token')
