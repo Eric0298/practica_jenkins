@@ -41,9 +41,7 @@
     "typescript-eslint": "^8.19.1"
   },
   "jest": {
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ]
+    "testEnvironment": "jsdom"
+    
   }
 }
