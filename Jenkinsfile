@@ -29,6 +29,11 @@ pipeline {
                 }
             }
         }
+        stage('Limpiar cache'){
+            steps{
+                deleteDir()
+            }
+        }
         
         stage('Install Dependencies') {
             steps {
