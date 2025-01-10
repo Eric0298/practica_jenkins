@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     echo "Ejecutando tests..."
-                    sh 'npm run test: jest'
+                    sh 'npm run test:jest'
                     TEST_RESULT = currentBuild.result
                 }
             }
