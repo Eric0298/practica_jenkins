@@ -30,6 +30,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.26.5",
     "@babel/preset-react": "^7.26.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
