@@ -1,21 +1,16 @@
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
+import babelParser from "@babel/eslint-parser"; // Importa el parser directamente
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
-      parser: "@babel/eslint-parser",
       ecmaVersion: "latest",
       sourceType: "module",
-      parserOptions: {
-        requireConfigFile: false, // No necesita un archivo de Babel
-        ecmaFeatures: {
-          jsx: true, // Habilitar JSX
-        },
-      },
       globals: globals.browser,
+      parser: babelParser, // Usa el parser importado
     },
     plugins: {
       react: pluginReact,

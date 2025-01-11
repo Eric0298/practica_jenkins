@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { render, screen } from '@testing-library/react';
-import RenderText from '../components/RenderText';
+
 
 test('RenderText muestra el texto correcto', () => {
   render(<RenderText />);

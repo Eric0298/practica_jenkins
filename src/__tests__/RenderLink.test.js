@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { render, screen } from '@testing-library/react';
-import RenderLink from '../components/RenderLink'
+
 
 test('RenderLink muestra el enlace correcto', () => {
   render(<RenderLink />);
