@@ -1,6 +1,3 @@
-
-
-
 const RenderText = () => {
   return (
     <div>

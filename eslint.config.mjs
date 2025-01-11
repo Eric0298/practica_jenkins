@@ -16,9 +16,25 @@ export default [
       react: pluginReact,
     },
     rules: {
-      "react/react-in-jsx-scope": "off",
-      "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "react/react-in-jsx-scope": "off", // No requiere React en JSX
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^(React|RenderText|RenderLogo|RenderLink)$", // Ignora React y los componentes en pruebas
+        },
+      ],
       "no-unused-expressions": "error",
+    },
+  },
+  {
+    files: ["**/*.test.js"], // Configuración específica para archivos de prueba
+    rules: {
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^(React|RenderText|RenderLogo|RenderLink)$", // Ignorar estos nombres en pruebas
+        },
+      ],
     },
   },
 ];

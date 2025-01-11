@@ -1,5 +1,7 @@
 
 import { render, screen } from '@testing-library/react';
+import RenderLogo from '../components/RenderLogo'; 
+
 
 
 test('RenderLogo muestra la imagen correctamente', () => {
