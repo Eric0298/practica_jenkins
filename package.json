@@ -7,7 +7,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "^5.0.1",
-    "typescript-eslint-parser": "^21.0.2"
+    "typescript-eslint-parser": "^21.0.2",
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,7 +44,7 @@
   "jest": {
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": [
-    "<rootDir>/src/setupTests.js"
-  ]
+      "<rootDir>/src/setupTests.js"
+    ]
   }
 }
