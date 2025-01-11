@@ -4,4 +4,3 @@ if [ "$1" == "success" ]; then
 else
   echo "RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)" >> README.md
 fi
-# Permiso de ejecución actualizado
