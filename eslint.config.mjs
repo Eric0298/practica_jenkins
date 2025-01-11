@@ -1,22 +1,22 @@
 import globals from "globals";
-import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    files: ["**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: globals.browser,
     },
     plugins: {
-      react: pluginReact, // Configuración como objeto
+      react: pluginReact,
     },
     rules: {
       "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      "no-unused-expressions": "error"
     },
   },
-  ...tseslint.configs.recommended,
 ];
