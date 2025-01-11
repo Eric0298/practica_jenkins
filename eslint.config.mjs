@@ -1,27 +1,29 @@
-import globals from "globals";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
-  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
+  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
   { languageOptions: { globals: globals.browser } },
   {
     plugins: {
       react: pluginReact
+    },
+    configs: {
+      react: pluginReact.configs.recommended,
+      ts: tseslint.configs.recommended
     }
   },
-  ...tseslint.configs.recommended,
-  pluginReact.configs.recommended,
   {
     settings: {
       react: {
-        version: "detect"
-      }
+        version: 'detect',
+      },
     },
     rules: {
-      "react/react-in-jsx-scope": "off"
+      'react/react-in-jsx-scope': 'off'
     }
   }
 ];
