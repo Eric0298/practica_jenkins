@@ -1,7 +1,6 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
-import compat from 'eslint-plugin-compat';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -10,21 +9,16 @@ export default [
   { languageOptions: { globals: globals.browser } },
   {
     plugins: {
-      react: pluginReact,
-      compat: compat
-    },
-    configs: {
-      react: pluginReact.configs.recommended,
-      ts: tseslint.configs.recommended
+      react: pluginReact
     },
     settings: {
       react: {
-        version: 'detect',
-      },
+        version: 'detect'
+      }
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'compat/compat': 'error'
+      'react/react-in-jsx-scope': 'off'
     }
-  }
+  },
+  ...tseslint.configs
 ];
