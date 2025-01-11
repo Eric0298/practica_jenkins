@@ -1,18 +1,19 @@
 import globals from 'globals';
 import tseslint from '@typescript-eslint/eslint-plugin';
+import tsplugin from '@typescript-eslint/parser';
 import pluginReact from 'eslint-plugin-react';
-import { defineConfig } from '@eslint/compat';
 
 /** @type {import('eslint').Linter.Config[]} */
-export default defineConfig([
+export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
   { languageOptions: { globals: globals.browser } },
   {
     plugins: {
       react: pluginReact,
-      ts: tseslint
+      '@typescript-eslint': tseslint
     },
+    parser: tsplugin,
     settings: {
       react: {
         version: 'detect'
@@ -26,4 +27,4 @@ export default defineConfig([
       'plugin:react/recommended'
     ]
   }
-]);
+];
