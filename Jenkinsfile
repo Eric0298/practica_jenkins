@@ -69,6 +69,15 @@ pipeline {
             }
         }
 
+        stage('Check Permissions') {
+            steps {
+                script {
+                    echo "Verificando permisos de los scripts..."
+                    sh 'ls -l ./jenkinsScripts/'
+                }
+            }
+        }
+
         stage('Update_Readme') {
             steps {
                 script {
@@ -84,6 +93,8 @@ pipeline {
         stage('Push_Changes') {
             steps {
                 script {
+                    echo "Asignando permisos de ejecución al script pushChanges.sh..."
+                    sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
                     echo "Pusheando cambios al repositorio..."
                     sh './jenkinsScripts/pushChanges.sh ${EXECUTOR} ${MOTIVO}'
                 }
