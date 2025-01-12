@@ -93,10 +93,9 @@ pipeline {
         stage('Push_Changes') {
             steps {
                 script {
-                    echo "Asignando permisos de ejecución al script pushChanges.sh..."
+                    echo "Configurando identidad de Git y enviando cambios..."
                     sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
-                    echo "Pusheando cambios al repositorio..."
-                    sh './jenkinsScripts/pushChanges.sh ${EXECUTOR} ${MOTIVO}'
+                    sh './jenkinsScripts/pushChanges.sh ${EXECUTOR} "${MOTIVO}"'
                 }
             }
         }
