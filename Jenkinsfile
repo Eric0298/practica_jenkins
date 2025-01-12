@@ -11,7 +11,7 @@ pipeline {
         TEST_RESULT = ''
         BUILD_RESULT = ''
         UPDATE_README_RESULT = ''
-        DEPLOY_RESULT = ''
+        DEPLOY_RESULT = 'NOT_EXECUTED' // Valor predeterminado
     }
     parameters {
         string(name: 'EXECUTOR', defaultValue: '', description: 'Nombre de la persona ejecutando la pipeline')
@@ -140,7 +140,15 @@ pipeline {
             steps {
                 script {
                     echo "Enviando notificación a Telegram..."
-                    sh "./jenkinsScripts/sendNotification.sh ${TELEGRAM_CHAT_ID} ${LINTER_RESULT} ${TEST_RESULT} ${UPDATE_README_RESULT} ${DEPLOY_RESULT}"
+                    def deployStatus = DEPLOY_RESULT == 'SUCCESS' ? 'Éxito' : (DEPLOY_RESULT == 'NOT_EXECUTED' ? 'No ejecutado' : 'Fallo')
+                    sh """
+                        ./jenkinsScripts/sendNotification.sh \
+                        ${TELEGRAM_CHAT_ID} \
+                        ${LINTER_RESULT} \
+                        ${TEST_RESULT} \
+                        ${UPDATE_README_RESULT} \
+                        ${deployStatus}
+                    """
                 }
             }
         }
