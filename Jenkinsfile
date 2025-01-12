@@ -112,7 +112,13 @@ pipeline {
                 script {
                     echo "Configurando identidad de Git y enviando cambios..."
                     sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
-                    sh './jenkinsScripts/pushChanges.sh "${EXECUTOR}" "${MOTIVO}"'
+                    withCredentials([usernamePassword(credentialsId: '680e2c18-0bce-4ff0-b6f0-7e4cd45bf25d', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        sh """
+                            git config credential.helper 'store'
+                            echo 'https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com' > ~/.git-credentials
+                        """
+                        sh './jenkinsScripts/pushChanges.sh "${EXECUTOR}" "${MOTIVO}"'
+                    }
                 }
             }
         }
