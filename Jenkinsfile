@@ -19,6 +19,23 @@ pipeline {
         string(name: 'CHAT_ID', defaultValue: '', description: 'Chat ID de Telegram para las notificaciones')
     }
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/ci_jenkins']],
+                        userRemoteConfigs: [[url: 'https://github.com/Eric0298/practica_jenkins.git']]
+                    ])
+                }
+            }
+        }
+
         stage('Petició de dades') {
             steps {
                 script {
