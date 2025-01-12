@@ -72,6 +72,8 @@ pipeline {
         stage('Update_Readme') {
             steps {
                 script {
+                    echo "Asignando permisos de ejecución al script..."
+                    sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
                     echo "Actualizando README..."
                     sh './jenkinsScripts/updateReadme.sh'
                     UPDATE_README_RESULT = currentBuild.result
