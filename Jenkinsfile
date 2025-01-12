@@ -130,7 +130,9 @@ pipeline {
             steps {
                 script {
                     echo "Desplegando a Vercel..."
-                    sh './jenkinsScripts/deployToVercel.sh'
+                    withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
+                        sh "vercel --token $VERCEL_TOKEN --prod"
+                    }
                     DEPLOY_RESULT = currentBuild.result
                 }
             }
