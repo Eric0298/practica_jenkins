@@ -81,7 +81,7 @@ pipeline {
                 script {
                     echo "Construyendo proyecto..."
                     sh 'npm run build'
-                    BUILD_RESULT = currentBuild.result
+                    BUILD_RESULT = currentBuild.currentResult
                 }
             }
         }
@@ -145,6 +145,10 @@ pipeline {
                     sh 'chmod +x ./jenkinsScripts/sendNotification.sh'
                     echo "Enviando notificación a Telegram..."
                     def deployStatus = DEPLOY_RESULT == 'SUCCESS' ? 'Éxito' : (DEPLOY_RESULT == 'NOT_EXECUTED' ? 'No ejecutado' : 'Fallo')
+                    withCredentials([
+                string(credentialsId: 'telegram_bot_token', variable: 'BOT_TOKEN'),
+                string(credentialsId: 'telegram_chat_id', variable: 'CHAT_ID')
+            ]){
                     sh """
                         ./jenkinsScripts/sendNotification.sh \
                         ${TELEGRAM_CHAT_ID} \
@@ -153,6 +157,7 @@ pipeline {
                         ${UPDATE_README_RESULT} \
                         ${deployStatus}
                     """
+              }
                 }
             }
         }
