@@ -122,7 +122,7 @@ pipeline {
                             git config credential.helper 'store'
                             echo 'https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com' > ~/.git-credentials
                         """
-                        sh './jenkinsScripts/pushChanges.sh "${EXECUTOR}" "${MOTIVO}"'
+                        sh "./jenkinsScripts/pushChanges.sh '${EXECUTOR}' '${MOTIVO}'"
                     }
                 }
             }
