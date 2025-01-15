@@ -133,7 +133,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
                         sh """
                     export VERCEL_TOKEN=${VERCEL_TOKEN}
-                    npx vercel --token $VERCEL_TOKEN --prod
+                    npx vercel --token $VERCEL_TOKEN --prod --yes
                     """
                     }
                     DEPLOY_RESULT = currentBuild.result
