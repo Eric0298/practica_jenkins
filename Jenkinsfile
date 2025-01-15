@@ -67,14 +67,19 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                script {
-                    echo "Ejecutando tests..."
-                    sh 'npm run test:jest'
-                    TEST_RESULT = currentBuild.currentResult
-                }
+    steps {
+        script {
+            echo "Ejecutando tests..."
+            try {
+                sh 'npm run test:jest'
+                TEST_RESULT = 'SUCCESS' 
+            } catch (Exception e) {
+                TEST_RESULT = 'FAILURE' 
+                error "Los tests fallaron." 
             }
         }
+    }
+}
 
         stage('Build') {
             steps {
@@ -101,7 +106,7 @@ pipeline {
                     echo "Asignando permisos de ejecución al script..."
                     sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
                     echo "Actualizando README..."
-                    sh './jenkinsScripts/updateReadme.sh'
+                    sh './jenkinsScripts/updateReadme.sh ${TEST_RESULT.toLowerCase()}'
                     UPDATE_README_RESULT = currentBuild.currentResult
                 }
             }
