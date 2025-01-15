@@ -36,15 +36,6 @@ pipeline {
             }
         }
 
-        stage('Set Permissions') {
-            steps {
-                script {
-                    echo "Configurando permisos de los scripts..."
-                    sh 'chmod +x ./jenkinsScripts/*.sh'
-                }
-            }
-        }
-
         stage('Petició de dades') {
             steps {
                 script {
@@ -55,24 +46,111 @@ pipeline {
                 }
             }
         }
-
-        // Resto de las etapas...
         
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo "Instalando dependencias..."
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Linter') {
+            steps {
+                script {
+                    echo "Ejecutando linter..."
+                    sh 'npm run lint'
+                    LINTER_RESULT = currentBuild.result
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    echo "Ejecutando tests..."
+                    sh 'npm run test:jest'
+                    TEST_RESULT = currentBuild.result
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    echo "Construyendo proyecto..."
+                    sh 'npm run build'
+                    BUILD_RESULT = currentBuild.result
+                }
+            }
+        }
+
+        stage('Check Permissions') {
+            steps {
+                script {
+                    echo "Verificando permisos de los scripts..."
+                    sh 'ls -l ./jenkinsScripts/'
+                }
+            }
+        }
+
+        stage('Update_Readme') {
+            steps {
+                script {
+                    echo "Asignando permisos de ejecución al script..."
+                    sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
+                    echo "Actualizando README..."
+                    sh './jenkinsScripts/updateReadme.sh'
+                    UPDATE_README_RESULT = currentBuild.result
+                }
+            }
+        }
+
+        stage('Push_Changes') {
+            steps {
+                script {
+                    echo "Configurando identidad de Git y enviando cambios..."
+                    sh 'chmod +x ./jenkinsScripts/pushChanges.sh'
+                    withCredentials([usernamePassword(credentialsId: '680e2c18-0bce-4ff0-b6f0-7e4cd45bf25d', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        sh """
+                            git config credential.helper 'store'
+                            echo 'https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com' > ~/.git-credentials
+                        """
+                        sh './jenkinsScripts/pushChanges.sh "${EXECUTOR}" "${MOTIVO}"'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Vercel') {
+            when {
+                expression { return BUILD_RESULT == 'SUCCESS' }
+            }
+            steps {
+                script {
+                    echo "Desplegando a Vercel..."
+                    withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
+                        sh "vercel --token $VERCEL_TOKEN --prod"
+                    }
+                    DEPLOY_RESULT = currentBuild.result
+                }
+            }
+        }
+
         stage('Notificación') {
             steps {
                 script {
                     echo "Enviando notificación a Telegram..."
                     def deployStatus = DEPLOY_RESULT == 'SUCCESS' ? 'Éxito' : (DEPLOY_RESULT == 'NOT_EXECUTED' ? 'No ejecutado' : 'Fallo')
-                    withEnv(["TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}"]) {
-                        sh """
-                            ./jenkinsScripts/sendNotification.sh \
-                            \$TELEGRAM_CHAT_ID \
-                            ${LINTER_RESULT} \
-                            ${TEST_RESULT} \
-                            ${UPDATE_README_RESULT} \
-                            ${deployStatus}
-                        """
-                    }
+                    sh """
+                        ./jenkinsScripts/sendNotification.sh \
+                        ${TELEGRAM_CHAT_ID} \
+                        ${LINTER_RESULT} \
+                        ${TEST_RESULT} \
+                        ${UPDATE_README_RESULT} \
+                        ${deployStatus}
+                    """
                 }
             }
         }
