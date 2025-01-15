@@ -106,7 +106,7 @@ pipeline {
                     echo "Asignando permisos de ejecución al script..."
                     sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
                     echo "Actualizando README..."
-                    sh './jenkinsScripts/updateReadme.sh ${TEST_RESULT.toLowerCase()}'
+                    sh './jenkinsScripts/updateReadme.sh ${TEST_RESULT}'
                     UPDATE_README_RESULT = currentBuild.currentResult
                 }
             }

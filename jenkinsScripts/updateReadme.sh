@@ -4,7 +4,7 @@
 README_FILE="README.md"
 
 # Verificar el parámetro de entrada
-if [ "$1" == "success" ]; then
+if [ "$1" == "SUCCESS" ]; then
   BADGE="![Success](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)"
 else
   BADGE="![Failure](https://img.shields.io/badge/test-failure-red)"
