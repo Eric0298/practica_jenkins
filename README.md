@@ -68,11 +68,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
-RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
+
 RESULTADO DE LOS ÚLTIMOS TESTS: ![Failure](https://img.shields.io/badge/test-failure-red)
