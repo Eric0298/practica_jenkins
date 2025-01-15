@@ -131,7 +131,10 @@ pipeline {
                 script {
                     echo "Desplegando a Vercel..."
                     withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
-                        sh "vercel --token $VERCEL_TOKEN --prod"
+                        sh """
+                    export VERCEL_TOKEN=${VERCEL_TOKEN}
+                    npx vercel --token $VERCEL_TOKEN --prod
+                    """
                     }
                     DEPLOY_RESULT = currentBuild.result
                 }
