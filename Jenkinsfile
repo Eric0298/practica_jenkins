@@ -141,6 +141,8 @@ pipeline {
         stage('Notificación') {
             steps {
                 script {
+                    echo "Verificando y asignando permisos de ejecución al script..."
+                    sh 'chmod +x ./jenkinsScripts/sendNotification.sh'
                     echo "Enviando notificación a Telegram..."
                     def deployStatus = DEPLOY_RESULT == 'SUCCESS' ? 'Éxito' : (DEPLOY_RESULT == 'NOT_EXECUTED' ? 'No ejecutado' : 'Fallo')
                     sh """
