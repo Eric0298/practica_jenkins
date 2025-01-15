@@ -61,7 +61,7 @@ pipeline {
                 script {
                     echo "Ejecutando linter..."
                     sh 'npm run lint'
-                    LINTER_RESULT = currentBuild.result
+                    LINTER_RESULT = currentBuild.currentResult
                 }
             }
         }
@@ -71,7 +71,7 @@ pipeline {
                 script {
                     echo "Ejecutando tests..."
                     sh 'npm run test:jest'
-                    TEST_RESULT = currentBuild.result
+                    TEST_RESULT = currentBuild.currentResult
                 }
             }
         }
@@ -102,7 +102,7 @@ pipeline {
                     sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
                     echo "Actualizando README..."
                     sh './jenkinsScripts/updateReadme.sh'
-                    UPDATE_README_RESULT = currentBuild.result
+                    UPDATE_README_RESULT = currentBuild.currentResult
                 }
             }
         }
