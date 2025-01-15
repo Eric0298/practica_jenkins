@@ -101,15 +101,16 @@ pipeline {
         }
 
         stage('Update_Readme') {
-            steps {
-                script {
-                    echo "Asignando permisos de ejecución al script..."
-                    sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
-                    echo "Actualizando README..."
-                    sh './jenkinsScripts/updateReadme.sh ${TEST_RESULT}'
-                    UPDATE_README_RESULT = currentBuild.currentResult
-                }
-            }
+          steps {
+             script {
+               echo "Asignando permisos de ejecución al script..."
+               sh 'chmod +x ./jenkinsScripts/updateReadme.sh'
+               echo "Valor de TEST_RESULT: ${TEST_RESULT}"
+               echo "Actualizando README..."
+               sh "./jenkinsScripts/updateReadme.sh ${TEST_RESULT}"
+               UPDATE_README_RESULT = currentBuild.currentResult
+             } 
+          }
         }
 
         stage('Push_Changes') {
