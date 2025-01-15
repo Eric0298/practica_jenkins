@@ -6,7 +6,9 @@ git config user.email "ericmancebo6950@gmail.com"
 git config user.name "$EXECUTOR"
 
 # Cambiar a la rama correcta
+git fetch origin
 git checkout ci_jenkins
+git pull origin ci_jenkins --rebase
 
 # Agregar cambios y hacer commit
 git add README.md
