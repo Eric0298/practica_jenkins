@@ -130,22 +130,31 @@ pipeline {
         }
 
         stage('Deploy to Vercel') {
-            when {
-                expression { return BUILD_RESULT == 'SUCCESS' }
-            }
-            steps {
-                script {
-                    echo "Desplegando a Vercel..."
-                    withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
-                        sh """
-                    export VERCEL_TOKEN=${VERCEL_TOKEN}
-                    npx vercel --token $VERCEL_TOKEN --prod --yes
+         when {
+           expression { return BUILD_RESULT == 'SUCCESS' }
+          }
+        steps {
+          script {
+            echo "Desplegando a Vercel..."
+             withCredentials([string(credentialsId: 'vercel_token', variable: 'VERCEL_TOKEN')]) {
+                try {
+                    echo "Token de Vercel cargado, iniciando despliegue..."
+                    sh """
+                        export VERCEL_TOKEN=${VERCEL_TOKEN}
+                        npx vercel --token $VERCEL_TOKEN --prod --yes
                     """
-                    }
-                    DEPLOY_RESULT = currentBuild.result
+                    DEPLOY_RESULT = 'SUCCESS' 
+                    echo "Despliegue completado exitosamente."
+                } catch (Exception e) {
+                    DEPLOY_RESULT = 'FAILURE' 
+                    echo "Despliegue fallido: ${e.message}"
+                    error "El despliegue a Vercel falló."
                 }
-            }
+             }
         }
+       }
+}
+
 
         stage('Notificación') {
             steps {
